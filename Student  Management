@@ -1,0 +1,2516 @@
+#include <stdio.h>
+#include <string.h>
+#include <conio.h>
+//#include <stdlib.h>
+#include <windows.h>
+#include<time.h>
+#define max 50
+int count,i,j,k,book_choice_number,hostel_choice_number,choice;
+int Credit[max],Section[max],course_size;
+int Credit_Grade[max];
+int sum=0;
+int sum1,Total_Credit_Amount;
+float gradePoint[max],sum2;
+char next,another='y',another_hostel='y';
+char next_page='n';
+/*-----------structure for students registration-------------*/
+typedef struct
+{
+	char username[max];
+	char login_user[max];
+	char pass[max];
+	char login_pass[max];
+	char gmail[max];
+	char gen[max];
+	char country[max];
+}student_registration;
+student_registration reg[10000];
+int reg_count=0;
+/*-----------structure for students record-------------*/
+typedef struct
+{
+	char stu_id[max];
+	char stu_name[max];
+	char gender[max];
+	char stu_father_name[max];
+	char stu_mother_name[max];
+	char stu_address[max];
+	char  stu_contact[max];
+	char stu_varisity_name[max];
+	char stu_department_name[max];
+}student;
+student st[1000];
+int itemcount=0;
+/*-----------structure for students libraray record-------------*/
+typedef struct
+{
+	char library_book_name[max];
+	char library_book_id[max];
+	char library_book_author[max];
+	char library_book_student_name[max];
+	char library_book_time[max];
+}library;
+library lib[1000];
+int itemcount1=0;
+
+/*-----------structure for students hostel record-------------*/
+typedef struct
+{
+	char hostel_stu_name[max];
+	int hostel_stu_age;
+	char hostel_stu_father_name[max];
+	char hostel_stu_father_contact[max];
+	char hostel_stu_contact[max];
+	char hostel_stu_mother_name[max];
+	char hostel_stu_nid[max];
+	char hostel_stu_birthday_date[max];
+	char hostel_stu_room_number[max];
+	char hostel_stu_id[max];
+}hostel;
+hostel hos[1000];
+int itemcount2=0;
+
+
+
+
+
+
+COORD coord = {0,0}; ///set the cordinate to 0, 0 (top-left corner of window);
+void gotoxy(int ,int);
+void Registration_drawRectangle();
+void Registration_clearWindow();
+void drawRectangle();
+void clearWindow();
+void System_Time();
+void window();
+void print_heading(const char st[]);
+void Loading(int count);
+void Registration_Login(student_registration[],int *);
+void get_password(char*);
+void login_get_password(char*);
+void Menu_List(int);
+void Student_Add(student[],int *,char);
+void Student_View(student[],int);
+void Update_Menu_List();
+void Student_Update(student[],int,char);
+int  Search(student [],char [],int);
+void Student_Search(student[], int,int);
+void Student_Delete(student[], int *);
+void clean(student[],int);
+void Payment_Scheme();
+int  Course_His();
+void Course_History_Menu();
+void Structure_Prog(void);
+void Data_Structure(void);
+void Algorithms(void);
+void Software_Req(void);
+void Digital_Elec(void);
+void Math(void);
+void phy(void);
+void Object_Ori(void);
+void Java_Prog(void);
+void Course_Add(int,int,int[],int[]);
+void Course_Payment(void);
+void Sgpa_Calculation(int,int,int [],float [],int,float);
+int  Library_Management();
+void Library_Menu_List(void);
+void Add_Books(library[],int *,char);
+char View_Books(library[],int);
+void Update_Book_Menu_List();
+void Update_Books(library[],int);
+int  Search1(library [],char [],int);
+void Search_Books(library[],int,int);
+void Delete_Books(library[],int *);
+void Books_clean(library[],int);
+int  Hostel_Management();
+void Hostel_Menu_List(void);
+void Hostel_New_Student(hostel[],int *,char);
+void Update_hostel_students_Menu_List();
+void Hostel_Student_Update(hostel[],int,char);
+char Hostel_Student_View(hostel[],int,char);
+int  Search2(hostel[],char [],int);
+void Search_Hostel_Student_Information(hostel[],int,int,char);
+void Delete_Hostel_Students_Information(hostel[],int *);
+void Clean_Hostel_Students_Information(hostel[],int);
+void Logout(void);
+
+int main()
+{
+	
+    window();
+    int x = 2;
+    menu:
+	Menu_List(count);
+    do
+	{
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_GREEN/FOREGROUND_BLUE);
+		
+        gotoxy(x,24);printf("  >>>Enter your choice>>> ");
+        scanf("%d",&choice);
+		switch(choice)
+		{
+            case 1:
+                Student_Add(st,&itemcount,another);
+				break;
+            case 2:
+                Student_View(st,itemcount);
+				break;
+            case 3:
+                Student_Update(st,itemcount,another);
+				break;
+            case 4:
+            	Payment_Scheme();
+                break;
+            case 5:
+                Course_His();
+                break;
+            case 6:
+				Course_Add(count,course_size,Credit,Section);
+                break;
+            case 7:
+                Course_Payment();
+				break;
+			case 8:
+				Sgpa_Calculation(count,course_size,Credit_Grade,gradePoint,sum1,sum2);
+				break;
+            case 9:
+				Student_Search(st,itemcount,i);
+				break;
+			case 10:
+				Student_Delete(st, &itemcount);
+				break;
+			case 11:
+				Library_Management();
+				break;
+			case 12:
+				Hostel_Management();
+				break;
+			case 13:
+				Logout();
+				break;
+            default:
+            		gotoxy(40,15);
+					printf("Sorry! Wrong number.Please again input(1 to 13)");
+					Beep(384,500);
+					Beep(382,500);
+					Beep(384,500);
+					Beep(382,500);goto menu;
+        }
+        SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_GREEN/FOREGROUND_BLUE);
+        next:
+        gotoxy(40,26);printf("\t     Please enter y or Y to continue: ");
+		scanf("%s",&next);
+		fflush(stdin);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),0x0f);
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_BLUE|FOREGROUND_RED|FOREGROUND_INTENSITY);
+		clearWindow();
+
+    }while(next=='y' || next=='Y');
+    clearWindow();
+
+
+
+
+}
+
+void gotoxy(int x, int y)
+{
+    coord.X = x; coord.Y = y; /// X and Y coordinates
+    SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), coord);
+    //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_BLUE|FOREGROUND_RED|FOREGROUND_INTENSITY);
+    //SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_GREEN+FOREGROUND_BLUE);
+}
+
+void Loading(int count)
+{
+	gotoxy(45,17);printf("Loading......");
+	gotoxy(45,18);
+	for(count=0;count<=35;count++)
+	{
+		printf("%c",177);
+		Sleep(25);	
+	}
+}
+void System_Time()
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_BLUE*FOREGROUND_RED*FOREGROUND_INTENSITY);
+	time_t T=time(NULL);
+	struct tm tm=*localtime(&T);
+	gotoxy(82,2);printf("Date: %02d/%02d/%04d\n",tm.tm_mday,tm.tm_mon+1,tm.tm_year+1900);
+	gotoxy(82,3);printf("Time: %02d:%02d:%02d",tm.tm_hour,tm.tm_min,tm.tm_sec);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),0x0f);
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_BLUE|FOREGROUND_RED|FOREGROUND_INTENSITY);
+	
+}
+void Registration_drawRectangle()
+{
+   
+    int i, j;
+    gotoxy(1,0);
+    printf("%c",201);
+    for(i = 2; i < 100; i++)
+	{
+        gotoxy(i, 0);
+        printf("%c",205);
+        Sleep(10);
+    }
+    gotoxy(100,0);
+    printf("%c",187);
+    for(i = 1; i <  28; i++)
+	{
+        gotoxy(100, i);
+        if(i == 6)
+		{
+            printf("%c",185);
+            Sleep(10);
+        }
+		else
+		{
+            printf("%c",186);
+            Sleep(10);
+        }
+    }
+    gotoxy(100, 28);
+    printf("%c",188);
+    for(i = 99; i > 0; i--)
+	{
+        gotoxy(i,28);
+        if(i == 35)
+		{
+            printf("%c",202);
+            Sleep(10);
+        }
+		else
+		{
+            printf("%c",205);
+            Sleep(10);
+        }
+    }
+    gotoxy(1,28);
+    printf("%c",200);
+    for(i = 27; i > 0; i--)
+	{
+        gotoxy(1,i);
+        if(i == 6)
+		{
+            printf("%c",204);
+            Sleep(10);
+        }
+		else
+		{
+            printf("%c",186);
+            Sleep(10);
+        }
+    }
+	
+    for(i = 2; i < 100; i++)
+	{
+    	gotoxy(i,6);
+        if(i == 35)
+		{
+            printf("%c",203);
+            Sleep(10);
+        }
+		else
+		{
+            printf("%c",205);
+            Sleep(10);
+        }
+    }
+
+    for(i = 7; i < 28; i++)
+	{
+        gotoxy(35,i);
+        printf("%c",186);
+        Sleep(10);
+    }
+
+}
+
+void Registration_clearWindow()
+{
+    int i,j;
+    for(i = 37; i < 100; i++)
+	{
+        for(j = 7; j < 28; j++)
+		{
+            gotoxy(i,j);printf(" ");
+        }Sleep(2);
+    }
+    return;
+}
+/*-------------------------------Table Rectangle-----------------------------------*/
+
+void drawRectangle()
+{
+    int c, d;
+    gotoxy(1,0);
+    printf("%c",201);
+    for(c = 2; c < 100; c++)
+	{
+        gotoxy(c, 0);
+        printf("%c",205);
+       Sleep(10);
+    }
+    gotoxy(100,0);
+    printf("%c",187);
+    for(c = 1; c <  28; c++)
+	{
+        gotoxy(100, c);
+        if(c == 6)
+		{
+			printf("%c",185);
+        }
+		else
+		{
+            printf("%c",186);
+            //Sleep(10);
+        }
+        Sleep(10);
+    }
+    gotoxy(100, 28);
+    printf("%c",188);
+    for(c = 99; c > 0; c--)
+	{
+        gotoxy(c,28);
+        if(c == 35)
+		{
+            printf("%c",202);//Sleep(10);
+
+        }else
+		{
+            printf("%c",205);//Sleep(10);
+        }
+        Sleep(10);
+    }
+    gotoxy(1,28);
+    printf("%c",200);
+    for(c = 27; c > 0; c--)
+	{
+        gotoxy(1,c);
+        if(c == 6)
+		{
+			printf("%c",204);
+            //Sleep(10);
+        }
+		else
+		{
+			printf("%c",186);
+            //Sleep(10);
+        }
+        Sleep(10);
+    }
+	
+    for(c= 2; c < 100; c++)
+	{
+    	gotoxy(c,6);
+        if(c == 35)
+		{
+            printf("%c",203);
+            //Sleep(10);
+        }
+		else
+		{
+            printf("%c",205);
+            //Sleep(10);
+        }
+        Sleep(10);
+    }
+
+    for(c = 7; c < 28; c++)
+	{
+        gotoxy(35,c);
+        printf("%c",186);
+        Sleep(10);
+    }
+
+}
+void clearWindow()
+{
+    int c,d;
+    for(c = 37; c < 100; c++)
+	{
+        for(d = 7; d < 28; d++)
+		{
+            gotoxy(c,d);printf(" ");
+        }Sleep(3);
+    }
+    return;
+}
+void window()
+{
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_BLUE|FOREGROUND_RED|FOREGROUND_INTENSITY);
+	Registration_drawRectangle();
+	gotoxy(28,2);
+    printf("STUDENT MANAGEMENT SYSTEM");
+    System_Time();
+    gotoxy(20,3);
+    printf("Daffodil International University, Dhanmondi 32,Dhaka");
+    gotoxy(31,4);
+    printf("Developer By Jobayed");
+    gotoxy(25,24);
+    Registration_Login(reg,&reg_count);
+	Registration_clearWindow();
+	system("cls");
+    drawRectangle();
+	gotoxy(28,2);
+    printf("STUDENT MANAGEMENT SYSTEM");
+    System_Time();
+    gotoxy(20,3);
+    printf("Daffodil International University, Dhanmondi 32,Dhaka");
+    gotoxy(31,4);
+    printf("Developer By Jobayed");
+    gotoxy(25,24);
+    SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),0x0f);
+}
+void print_heading(const char heading[])
+{
+    gotoxy(45,8);printf("\t\tTITLE : %s",heading);
+}
+void Registration_Login(student_registration reg[],int *reg_count)
+{
+    FILE *fp;
+    fp = fopen("C:\\record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBoxA(0,"Error in Opening file\nMake sure your file is not write protected","Warning",MB_OK);
+
+    }
+	else
+	{
+		int print = 37;
+		int x=7,reg_log_select;
+		do
+		{
+			again:
+			gotoxy(x,14);printf("1.Registration");
+			gotoxy(x,15);printf("2.Login");
+			gotoxy(x,17);printf("Enter your choose-->> ");
+			scanf("%d",&reg_log_select);
+			Loading(count);
+			Registration_clearWindow();
+			print_heading("REGISTRATION & LOGIN SYSTEM");
+			switch(reg_log_select)
+			{
+				case 1:
+					{
+						fflush(stdin);
+						gotoxy(print,12);printf("1.Username          :  ");
+						gets(reg[*reg_count].username);
+						//fputs(reg[*reg_count].username,fp);
+						gotoxy(print,13);printf("2.New Password      :  ");
+						//gets(reg->pass);
+						get_password(reg[*reg_count].pass);
+						gotoxy(print,14);printf("3.Confirm Password  :  ");
+						//gets(reg->pass);
+						get_password(reg[*reg_count].pass);
+						gotoxy(print,15);printf("4.E-mail            :  ");
+						gets(reg[*reg_count].gmail);
+						gotoxy(print,16);printf("5.Gender            :  ");
+						gets(reg[*reg_count].gen);
+						gotoxy(print,17);printf("6.Nationality       :  ");
+						gets(reg[*reg_count].country);
+						char design[]={"Thank You! Your Registration Complete."};
+						gotoxy(42,19);
+						for(count=0;design[count]!='\0';count++)
+						{
+							printf("%c",design[count]);
+							Sleep(50);
+						}
+						Registration_clearWindow();
+						break;
+					}
+				case 2:
+					login_again:
+						fflush(stdin);
+						gotoxy(print,16);printf("Username   : ");
+						gets(reg[*reg_count].login_user);
+						gotoxy(print,18);printf("Password   : ");
+						login_get_password(reg[*reg_count].login_pass);
+						//gets(reg->login_pass);
+						if(strcmp(reg[*reg_count].username,reg[*reg_count].login_user)==0 && strcmp(reg[*reg_count].pass,reg[*reg_count].login_pass)==0)
+						{
+							gotoxy(43,20);printf("Congratulations! Login in Succesful.\n\n");
+							gotoxy(45,23);
+							char welcome[]={"THANK YOU SO MUCH DEAR STUDENTS.WELCOME TO OUR SYSTEM"};
+							for(count=0;welcome[count]!='\0';count++)
+							{
+								printf("%c",welcome[count]);
+								Sleep(50);
+							}
+						}
+						else
+						{
+							gotoxy(43,20);printf("''Sorry! Username or Password Error!''");
+							Beep(384,500);
+							Beep(382,500);
+							Beep(384,500);
+							Beep(382,500);
+							Registration_clearWindow();
+							goto login_again;
+						}
+						break;
+				default :
+							gotoxy(40,15);
+							printf("Sorry! Wrong number.Please again input(1 or 2)");
+							Beep(384,500);
+							Beep(382,500);
+							Beep(384,500);
+							Beep(382,500);goto again;	
+			}
+		}while(reg_log_select!=2);
+	}
+    	fclose(fp);
+    	return;
+}
+
+void get_password(char* pass)
+{
+    char temp_passP[25];
+    int i=0;
+    while(1)
+    {
+        temp_passP[i]=getch();
+        if(temp_passP[i]==13)
+		{
+			break;
+		}
+        else if(temp_passP[i]==8)
+        {
+            if(i!=0)
+			{
+            	printf("\b \b");
+        		i--;
+            }
+			else
+			{
+				printf("\a");
+			}
+        }
+        else
+        {
+            printf("*");
+            *(pass+i) = temp_passP[i];
+            i++;
+        }
+        *(pass+i)='\0';
+     }
+}
+
+void login_get_password(char *login_pass)
+{
+	char temp_passP[25];
+    int i=0;
+    while(1)
+    {
+        temp_passP[i]=getch();
+        if(temp_passP[i]==13)
+		{
+			break;
+		}
+        else if(temp_passP[i]==8)
+        {
+            if(i!=0)
+			{
+            	printf("\b \b");
+        		i--;
+            }
+			else
+			{
+				printf("\a");
+			}
+        }
+        else
+        {
+            printf("*");
+            *(login_pass+i) = temp_passP[i];
+            i++;
+        }
+        *(login_pass+i)='\0';
+     }
+}
+
+
+
+
+void Menu_List(int count)
+{
+	int x=7;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),FOREGROUND_GREEN+FOREGROUND_BLUE);
+	gotoxy(x,7);
+	printf("\t       MENU");
+	gotoxy(2,8);
+	for(count=0;count<33;count++)
+	{
+		printf("%c",254);
+	}
+	gotoxy(2,9);
+	char design[]={"  1. Student Add"};
+	for(count=0;design[count]!='\0';count++)
+	{
+		printf("%c",design[count]);
+		Sleep(20);
+	}
+    gotoxy(4,10);
+    char desig[]={"  2. Profile"};
+	for(count=0;desig[count]!='\0';count++)
+	{
+		printf("%c",desig[count]);
+		Sleep(20);
+	}
+	gotoxy(6,11);
+	char desi[]={"  3. Profile Update"};
+	for(count=0;desi[count]!='\0';count++)
+	{
+		printf("%c",desi[count]);
+		Sleep(10);
+	}
+    gotoxy(8,12);
+    char des[]={"  4. Payment Scheme"};
+	for(count=0;des[count]!='\0';count++)
+	{
+		printf("%c",des[count]);
+		Sleep(10);
+	}
+    gotoxy(10,13);
+    char de[]={"  5. Course History"};
+	for(count=0;de[count]!='\0';count++)
+	{
+		printf("%c",de[count]);
+		Sleep(10);
+	}
+	gotoxy(12,14);
+	char d[]={"  6. Course Add"};
+	for(count=0;d[count]!='\0';count++)
+	{
+		printf("%c",d[count]);
+		Sleep(10);
+	}
+	gotoxy(14,15);
+	char d1[]={"  7. Payment"};
+	for(count=0;d1[count]!='\0';count++)
+	{
+		printf("%c",d1[count]);
+		Sleep(10);
+	}
+	gotoxy(12,16);
+	char d2[]={"  8. Semester SGPA"};
+	for(count=0;d2[count]!='\0';count++)
+	{
+		printf("%c",d2[count]);
+		Sleep(10);
+	}
+	gotoxy(10,17);
+	char d3[]={"  9. Students Search"};
+	for(count=0;d3[count]!='\0';count++)
+	{
+		printf("%c",d3[count]);
+		Sleep(10);
+	}
+	gotoxy(8,18);
+	char d4[]={"  10.Student Delete"};
+	for(count=0;d4[count]!='\0';count++)
+	{
+		printf("%c",d4[count]);
+		Sleep(10);
+	}
+	gotoxy(6,19);
+	char d5[]={"  11.Students Library"};
+	for(count=0;d5[count]!='\0';count++)
+	{
+		printf("%c",d5[count]);
+		Sleep(10);
+	}
+	gotoxy(4,20);
+	char d6[]={"  12.Students Hostel"};
+	for(count=0;d6[count]!='\0';count++)
+	{
+		printf("%c",d6[count]);
+		Sleep(10);
+	}
+	gotoxy(2,21);
+	char d7[]={"  13.Logout"};
+	for(count=0;d7[count]!='\0';count++)
+	{
+		printf("%c",d7[count]);
+		Sleep(10);
+	}
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE),0x0f);
+}
+/*--------------------------------------Student Add--------------------------------------*/
+void Student_Add(student st[],int *itemcount,char another)
+{
+
+	Loading(count);
+	clearWindow();
+    print_heading("STUDENTS ADD");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+		while(another=='y')
+		{
+			gotoxy(print,10);printf("\tEnter student's ID           : ");
+			scanf("%s",&st[*itemcount].stu_id);
+			fflush(stdin);
+			if(Search(st,st[*itemcount].stu_id,*itemcount)!=-1)
+			{
+				gotoxy(print,11);printf("\t   This ID already exists\n");
+				gotoxy(print,13);printf("\tEnter student's ID           : ");
+				scanf("%s",&st[*itemcount].stu_id);
+				fflush(stdin);
+			}
+			gotoxy(print,14);printf("\tEnter student's Name         : ");
+			gets(st[*itemcount].stu_name);
+			gotoxy(print,15);printf("\tEnter university(short) name : ");
+			gets(st[*itemcount].stu_varisity_name);
+			gotoxy(print,16);printf("\tEnter depertment name        : ");
+			gets(st[*itemcount].stu_department_name);
+			gotoxy(print,17);printf("\tEnter student's Gender       : ");
+			gets(st[*itemcount].gender); 
+			gotoxy(print,18);printf("\tEnter student's father name  : ");
+			gets(st[*itemcount].stu_father_name);
+			gotoxy(print,19);printf("\tEnter student's mother name  : ");
+			gets(st[*itemcount].stu_mother_name);
+			gotoxy(print,20);printf("\tEnter student's division     : ");
+			gets(st[*itemcount].stu_address);
+			gotoxy(print,21);printf("\tEnter student's contact      : ");
+			gets(st[*itemcount].stu_contact);
+			gotoxy(print,23);printf("\tThank you students,your information has been added.");
+			gotoxy(print,25);printf("\t\tAdd Another Students(y/n) : ");
+			scanf("%s",&another);
+			fflush(stdin);
+			++(*itemcount);
+			clearWindow();
+		}	
+
+	}
+    fclose(fp);
+    return;
+}
+void Student_View(student st[], int itemcount)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("STUDENTS PROFILE");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL){
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+		int i=0;
+    	while(i<itemcount)
+        {
+        	if(st[i].stu_id!="")
+        	{
+        		gotoxy(print,10);printf("\tEnter student's ID           :  %s",st[i].stu_id);
+				gotoxy(print,11);printf("\tEnter student's Name         :  %s",st[i].stu_name);
+				gotoxy(print,12);printf("\tEnter university(short) name :  %s",st[i].stu_varisity_name);
+				gotoxy(print,13);printf("\tEnter depertment name        :  %s",st[i].stu_department_name);
+				gotoxy(print,14);printf("\tEnter student's Gender       :  %s",st[i].gender);
+				gotoxy(print,15);printf("\tEnter student's father name  :  %s",st[i].stu_father_name);
+				gotoxy(print,16);printf("\tEnter student's mother name  :  %s",st[i].stu_mother_name);
+				gotoxy(print,17);printf("\tEnter student's division     :  %s",st[i].stu_address);
+				gotoxy(print,18);printf("\tEnter student's contact      :  %s",st[i].stu_contact);
+            	
+    		}
+			i++;
+		}
+	}
+    fclose(fp);
+    return;
+}
+void Update_Menu_List()
+{
+		int print=37;
+		gotoxy(print,12);printf("\t1. Students name");
+		gotoxy(print,13);printf("\t2. University(short) name");
+		gotoxy(print,14);printf("\t3. Department name");
+		gotoxy(print,15);printf("\t4. Students gender");
+		gotoxy(print,16);printf("\t5. Father name");
+		gotoxy(print,17);printf("\t6. Mother name");
+		gotoxy(print,18);printf("\t7. Division");
+		gotoxy(print,19);printf("\t8. Students contact");
+}
+void Student_Update(student st[],int itemcount,char another)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("STUDENTS PROFILE UPDATE");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+	}
+	else
+	{
+		char id[max];
+		int column_index;
+		gotoxy(print,10);printf("\tEnter student's ID :   ");
+		scanf("%s",&id);
+		while(another=='y')
+		{
+		
+			Update_Menu_List();
+			gotoxy(print,20);printf("\tPlease choose the number for student profile update :  ");
+			scanf("%d",&column_index);
+			int index = Search(st, id,itemcount);
+			fflush(stdin);
+			if (index != -1)
+			{
+				if (column_index == 1)
+				{
+					gotoxy(print,22);printf("\tEnter student's Name:   ");
+					gets(st[index].stu_name);
+			
+				}
+				else if (column_index == 2)
+				{
+					gotoxy(print,22);printf("\tEnter university(short) name :   ");
+					gets(st[index].stu_varisity_name);
+				}
+				else if (column_index == 3)
+				{
+					gotoxy(print,22);printf("\tEnter depertment name        :   ");
+					gets(st[index].stu_department_name);
+				}
+				else if (column_index == 4)
+				{
+					gotoxy(print,22);printf("\tEnter student's Gender       :   ");
+					gets(st[index].gender);
+				}
+				else if (column_index == 5)
+				{
+					gotoxy(print,22);printf("\tEnter student's father name  :   ");
+					gets(st[index].stu_father_name);
+				}
+				else if (column_index == 6)
+				{
+					gotoxy(print,22);printf("\tEnter student's mother name  :   ");
+					gets(st[index].stu_mother_name);
+				}
+				else if(column_index==7)
+				{
+					gotoxy(print,22);printf("\tEnter student's division     :   ");
+					gets(st[index].stu_address);
+				}
+				else if(column_index==8)
+				{
+					gotoxy(print,22);printf("\tEnter student's contact      :   ");
+					gets(st[index].stu_contact);
+				}
+		
+				else 
+				{
+					gotoxy(print,11);printf("\tSorry!Invalid your choose number");
+				}
+			}
+		
+			else
+			{
+				gotoxy(print,22);printf("\tThe record deosn't exits.Check the ID and try again.");
+			}
+			gotoxy(print,25);printf("\t\t Another Number Profile Update(y/n) : ");
+			scanf("%s",&another);
+			fflush(stdin);
+			clearWindow();
+		}
+    	fclose(fp);
+    	clearWindow();
+    	return;
+    
+    }
+}
+/*------------------------Student search function to the location of the record-----------------------*/
+int Search(student st[], char id[],int itemcount)
+{
+	int found =-1,i;
+	for (i = 0; i < itemcount && found==-1; i++)
+	{
+		if(strcmp(st[i].stu_id,id)==0)
+		found=i;
+		else found=-1 ;
+	}
+	return found;
+}
+//----------------------------------search function to the find record---------------------------------
+void Student_Search(student st[], int itemcount,int i)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("STUDENTS SEARCH");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL){
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+		char id[10];
+		gotoxy(print,10);printf("\tSearch Student's ID    :   ");
+		scanf("%s",&id);
+		int index=Search(st,id,itemcount);
+		if (index != -1)
+		{
+	 		
+        		gotoxy(print,12);printf("\tStudent's ID           :  %s",st[i].stu_id);
+				gotoxy(print,13);printf("\tStudent's Name         :  %s",st[i].stu_name);
+				gotoxy(print,14);printf("\tUniversity(short) name :  %s",st[i].stu_varisity_name);
+				gotoxy(print,15);printf("\tDepertment name        :  %s",st[i].stu_department_name);
+				gotoxy(print,16);printf("\tStudent's Gender       :  %s",st[i].gender);
+				gotoxy(print,17);printf("\tStudent's father name  :  %s",st[i].stu_father_name);
+				gotoxy(print,18);printf("\tStudent's mother name  :  %s",st[i].stu_mother_name);
+				gotoxy(print,19);printf("\tStudent's division     :  %s",st[i].stu_address);
+				gotoxy(print,20);printf("\tStudent's contact      :  %s",st[i].stu_contact);
+			
+		}
+		else
+		{
+			gotoxy(print,10);printf("\t''The record doesn't exits.''\n");
+			Beep(384,500);
+			Beep(382,500);
+			Beep(384,500);
+		}
+
+	}
+    	fclose(fp);
+    	return;
+}
+/*-------------------------------------Student Delete-------------------------------------------*/
+void Student_Delete(student st[],int *itemcount)
+{
+	
+	Loading(count);
+	clearWindow();
+    print_heading("STUDENTS SEARCH");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL){
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+		char id[10];
+		int index,i;
+		if (*itemcount > 0)
+		{
+			
+			gotoxy(print,10);
+			printf("\tDelete Student's ID:   ");
+			scanf("%s",id);
+			index = Search(st,id,*itemcount);
+			if ((index!=-1) && (*itemcount != 0))
+			{
+				if (index == (*itemcount-1)) //delete the last record
+				{
+					clean(st,index);
+					--(*itemcount);
+					gotoxy(40,12);printf("\t      ''The record was deleted.''");
+				}
+				else//-----delete the first or middle record-----
+				{
+					for (i = index; i < *itemcount-1; i++)
+					{
+						st[i] = st[i + 1];
+						clean(st, *itemcount);
+						--(*itemcount) ;
+					}
+
+				}
+
+			}		
+			else 
+			{
+				gotoxy(print,12);
+				printf("\t   ''The record doesn't exist. Please Check the Id and try again.''");
+			}
+		}
+		else 
+		{
+			gotoxy(40,12);printf("\t''Sorry!No record to delete''\n");
+			Beep(384,500);
+			Beep(382,500);
+			Beep(384,500);
+			Beep(382,500);                         
+		}
+	}
+    fclose(fp);
+    return;
+}
+
+//function to clean deleted record
+void clean(student st[],int index)
+{
+	strcpy(st[index].stu_id,"");
+	strcpy(st[index].stu_name,"");
+	strcpy(st[index].stu_father_name,"");
+	strcpy(st[index].stu_mother_name,"");
+	strcpy(st[index].stu_address,"");
+	strcpy(st[index].stu_contact,"");
+	strcpy(st[index].stu_name,"");
+}
+void Payment_Scheme()
+{
+	Loading(count);
+	clearWindow();
+    print_heading("PAYMENT SCHEME");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+
+		gotoxy(39,10);
+		for(count=37;count<=95;count++)
+		{
+			printf("%c",205);
+		}
+		gotoxy(39,11);printf("| Payment");gotoxy(67,11);printf("Amount");gotoxy(84,11);printf("Multiple     |");
+		gotoxy(39,12);
+		for(count=37;count<=95;count++)
+		{
+			printf("%c",205);
+		}
+		gotoxy(39,13);printf("| Addmission Fee--------------");gotoxy(67,13);printf("15,000---------");gotoxy(82,13);printf("Admission time |");
+		gotoxy(39,14);printf("| Campus Dev. Fee-------------");gotoxy(67,14);printf("4,500----------");gotoxy(82,14);printf("Every Semester |");
+		gotoxy(39,15);printf("| Extra Curruculam Fee--------");gotoxy(67,15);printf("1,500----------");gotoxy(82,15);printf("Every Semester |");
+		gotoxy(39,16);printf("| Lab Fee---------------------");gotoxy(67,16);printf("2,000----------");gotoxy(82,16);printf("Every Semester |");
+		gotoxy(39,17);printf("| Library Fee-----------------");gotoxy(67,17);printf("3,000----------");gotoxy(82,17);printf("Admission time |");
+		gotoxy(39,18);printf("| Scout & BNCC Fee------------");gotoxy(67,18);printf("1,000----------");gotoxy(82,18);printf("Admission time |");
+		gotoxy(39,19);printf("| Student Life Insurance------");gotoxy(67,19);printf("4,000----------");gotoxy(82,19);printf("Admission time |");
+		gotoxy(39,20);printf("| Smart card------------------");gotoxy(67,20);printf("1,000----------");gotoxy(82,20);printf("Admission time |");
+		gotoxy(39,21);printf("| Tution Fee(Core)------------");gotoxy(67,21);printf("3,500----------");gotoxy(82,21);printf("Every Semester |");
+		gotoxy(39,22);printf("| Tution Fee(General Course)--");gotoxy(67,22);printf("3,200----------");gotoxy(82,22);printf("Every Semester |");
+		gotoxy(39,23);printf("| Tution Fee(Lab)-------------");gotoxy(67,23);printf("4,500----------");gotoxy(82,23);printf("Every Semester |");
+		gotoxy(39,24);printf("| Tution Fee(Major Course)----");gotoxy(67,24);printf("5,000----------");gotoxy(82,24);printf("Every Semester |");
+		gotoxy(39,25);
+		for(count=37;count<=95;count++)
+		{
+			printf("%c",205);
+		}
+		
+	}
+    fclose(fp);
+    return;
+}
+int Course_His()
+{
+	Loading(count);
+	clearWindow();
+    print_heading("COURSE HISTORY");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+    else
+    {
+
+    	do
+    	{
+    		again:
+    		Course_History_Menu();
+			switch(choice)
+			{
+				case 1:
+					Structure_Prog();
+					break;
+				case 2:
+					Data_Structure();
+					break;
+				case 3:
+					Algorithms();
+					break;
+				case 4:
+					Software_Req();
+					break;
+				case 5:
+					Digital_Elec();
+					break;
+				case 6:
+					Math();
+					break;
+				case 7:
+					phy();
+					break;
+				case 8:
+					Object_Ori();
+					break;
+				case 9:
+					Java_Prog();
+					break;
+				case 10:
+					return 1;
+				defalut:
+					gotoxy(46,23);printf("Sorry! Wrong your choose number!Please try again!");
+					Beep(384,500);
+					Beep(382,500);
+					Beep(384,500);
+					Beep(382,500);goto again;
+			}
+			gotoxy(40,26);printf("\t     Please enter y or Y to continue: ");
+			scanf("%s",&next);
+			fflush(stdin);
+			clearWindow();	
+    		
+		}while(choice!=12);
+			
+	}
+
+    fclose(fp);
+}
+void Course_History_Menu()
+{
+	int print= 46;
+	gotoxy(46,10);
+	for(count=0;count<43;count++)
+	{
+		printf("%c",254);
+	}
+	gotoxy(print,11);printf("\xba");gotoxy(88,11);printf("\xba");
+	gotoxy(print,12);printf("\xba\t\t1. Structure Programming");gotoxy(88,12);printf("\xba");
+	gotoxy(print,13);printf("\xba\t\t2. Data Structure");gotoxy(88,13);printf("\xba");
+	gotoxy(print,14);printf("\xba\t\t3. Algorithms");gotoxy(88,14);printf("\xba");
+	gotoxy(print,15);printf("\xba\t\t4. Software Requirements");gotoxy(88,15);printf("\xba");
+	gotoxy(print,16);printf("\xba\t\t5. Digital Electronics");gotoxy(88,16);printf("\xba");
+	gotoxy(print,17);printf("\xba\t\t6. Mathematics");gotoxy(88,17);printf("\xba");
+	gotoxy(print,18);printf("\xba\t\t7. Physics");gotoxy(88,18);printf("\xba");
+	gotoxy(print,19);printf("\xba\t\t8. Object-Oriented");gotoxy(88,19);printf("\xba");
+	gotoxy(print,20);printf("\xba\t\t9. Java");gotoxy(88,20);printf("\xba");
+	gotoxy(print,21);printf("\xba\t\t10.Back Main Menu");gotoxy(88,21);printf("\xba");
+	gotoxy(print,23);printf("\xba");gotoxy(88,23);printf("\xba");
+	gotoxy(46,24);
+	for(count=0;count<43;count++)
+	{
+		printf("%c",254);
+	}
+	gotoxy(print,22);printf("\xba\t   =>=>please enter your choise=>=>");gotoxy(88,22);printf("\xba");
+	scanf("%d",&choice);
+	clearWindow();
+}
+
+void Structure_Prog(void)
+{
+	Loading(count);
+	clearWindow();
+	print_heading("STRUCTURE PROGRAMMING");
+	char Str_Programming[]={"The structure of C language consists of six important."};
+	gotoxy(38,12);
+	for(count=0;Str_Programming[count]!='\0';count++)
+	{
+		printf("%c",Str_Programming[count]);
+		Sleep(15);
+	}
+	gotoxy(38,13);printf("segments.These are documentation section, link section,");
+	gotoxy(38,14);printf("definition section,global declaration section,main ()function,");
+	gotoxy(38,15);printf("and other executable functions of the program.");
+}
+
+
+void Data_Structure(void)
+{
+	Loading(count);
+	clearWindow();
+	print_heading("DATA STRUCTURE");
+	char data_Programming[]={"Data structure, way in which data are stored for efficient"};
+	gotoxy(38,12);
+	for(count=0;data_Programming[count]!='\0';count++)
+	{
+		printf("%c",data_Programming[count]);
+		Sleep(15);
+	}
+	gotoxy(38,13);printf("search and retrieval.Different data structures are suited for,");
+	gotoxy(38,14);printf("for different problems.Some data structures are useful for");
+	gotoxy(38,15);printf("simple general problems,such as retrieving data that has been");
+	gotoxy(38,16);printf("stored with a specific identifier.\n\t\tFor example,");
+	gotoxy(38,17);printf("an online dictionary can be structured");
+	gotoxy(38,18);printf("so that it can retrieve the definition of a word.");
+	gotoxy(38,19);printf("On the other hand, specialized data structures have");
+	gotoxy(38,20);printf("beendevised to solve complex specific search problems");
+	
+}
+
+void Algorithms(void)
+{
+	Loading(count);
+	clearWindow();
+	print_heading("ALGORITHMS");
+	char algorithm_Programming[]={"Algorithms have a long history and the word can be traced"};
+	gotoxy(38,12);
+	for(count=0;algorithm_Programming[count]!='\0';count++)
+	{
+		printf("%c",algorithm_Programming[count]);
+		Sleep(15);
+	}
+	gotoxy(38,13);printf("back to the 9th century.At this time the Persian scientist,");
+	gotoxy(38,14);printf("astronomer andmathematician Abdullah Muhammad bin");
+	gotoxy(38,15);printf("Musa al-Khwarizmi,toften cited as“The father of Algebra”,");
+	gotoxy(38,16);printf("was indirect responsible stored with a specific identifier.");
+	gotoxy(38,17);printf("For example,for the creation of the term “Algorithm“");
+}
+void Software_Req(void)
+{
+	Loading(count);
+	clearWindow();
+	print_heading("SOFTWARE REQUIREMENTS");
+	char algorithm_Programming[]={"The software requirements are description of features and"};
+	gotoxy(38,12);
+	for(count=0;algorithm_Programming[count]!='\0';count++)
+	{
+		printf("%c",algorithm_Programming[count]);
+		Sleep(15);
+	}
+	gotoxy(38,13);printf("functionalities of the target system.Requirements convey");
+	gotoxy(38,14);printf("the expectations of users from the software product.");
+	gotoxy(38,15);printf("The requirements can be obvious or hidden, known or unknown,");
+	gotoxy(38,16);printf("expected or unexpected from client’s point of view.");
+}
+
+void Digital_Elec(void)
+{
+	Loading(count);
+	clearWindow();
+	print_heading("DIGITAL ELECTRONICS");
+	char algorithm_Programming[]={"Digital electronics are those electronics systems that use a"};
+	gotoxy(38,12);
+	for(count=0;algorithm_Programming[count]!='\0';count++)
+	{
+		printf("%c",algorithm_Programming[count]);
+		Sleep(15);
+	}
+	gotoxy(38,13);printf("digital signal instead of an analog signal.Digital");
+	gotoxy(38,14);printf("electronics are the most common representation of Boolean");
+	gotoxy(38,15);printf("algebra and are the basis of all digital circuits for");
+	gotoxy(38,16);printf("computers,mobile phones, and numerous other consumer products.");
+}
+
+void Math(void)
+{
+	Loading(count);
+	clearWindow();
+	print_heading("MATHEMATICS");
+	char algorithm_Programming[]={"Mathematics is the science that deals with the logic of shape,"};
+	gotoxy(38,12);
+	for(count=0;algorithm_Programming[count]!='\0';count++)
+	{
+		printf("%c",algorithm_Programming[count]);
+		Sleep(15);
+	}
+	gotoxy(38,13);printf("quantity and arrangement.Math is all around us, in everything");
+	gotoxy(38,14);printf("we do.It is the building block for everything in our daily");
+	gotoxy(38,15);printf(" lives,including mobile devices, architecture (ancient and");
+	gotoxy(38,16);printf(" modern),art, money, engineering, and even sports.");
+}
+
+void phy(void)
+{
+	Loading(count);
+	clearWindow();
+	print_heading("PHYSICS");
+	char algorithm_Programming[]={"Physics is the branch of science that deals with the structure"};
+	gotoxy(38,12);
+	for(count=0;algorithm_Programming[count]!='\0';count++)
+	{
+		printf("%c",algorithm_Programming[count]);
+		Sleep(15);
+	}
+	gotoxy(38,13);printf("of matter and how the fundamental constituents of the universe");
+	gotoxy(38,14);printf("interact.It is the building block for everything in our,");
+	gotoxy(38,15);printf("daily livesIt studies objects ranging from the very small");
+	gotoxy(38,16);printf("using quantum mechanics to the entire universe using general");
+	gotoxy(38,17);printf("relativity.universe using general relativity.");
+}
+
+void Object_Ori(void)
+{
+	Loading(count);
+	clearWindow();
+	print_heading("OBJECT ORIENTED");
+	char algorithm_Programming[]={"Object-oriented programming (OOP) is a programming paradigm"};
+	gotoxy(38,12);
+	for(count=0;algorithm_Programming[count]!='\0';count++)
+	{
+		printf("%c",algorithm_Programming[count]);
+		Sleep(15);
+	}
+	gotoxy(38,13);printf("based on the concept of objects,which can contain data");
+	gotoxy(38,14);printf("and code:  data in the form of fields (often known as");
+	gotoxy(38,15);printf("attributes or properties), and code, in the form of");
+	gotoxy(38,16);printf("procedures (often known as methods).");
+}
+
+void Java_Prog(void)
+{
+	Loading(count);
+	clearWindow();
+	print_heading("JAVA PROGRAMING");
+	char algorithm_Programming[]={"Java is a class-based, object-oriented programming language"};
+	gotoxy(38,12);
+	for(count=0;algorithm_Programming[count]!='\0';count++)
+	{
+		printf("%c",algorithm_Programming[count]);
+		Sleep(15);
+	}
+	gotoxy(38,13);printf("that is designed to have as few implementation dependencies");
+	gotoxy(38,14);printf("as possible.Java applications are typically compiled to");
+	gotoxy(38,15);printf("bytecode that can run on any Java virtual machine ");
+	gotoxy(38,16);printf("(JVM) regardless.of the underlying computer architecture.");
+}
+
+void Course_Add(int count,int course_size,int Credit[],int Section[])
+{
+	Loading(count);
+	clearWindow();
+    print_heading("CREDIT & SECTION ADD");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+		again1:
+			gotoxy(print,10);printf("Please Enter How Many Courses Did You Take This Semester : ");
+			scanf("%d",&course_size);
+			if(course_size>10)
+			{
+				gotoxy(42,11);printf("''No more than '10' courses can be taken.''");
+				clearWindow();
+				goto again1;
+			}
+			gotoxy(print,12);
+			for(count=0;count<62;count++)
+			{
+				printf("%c",254);
+			}
+			gotoxy(print,13);printf("\xba Example: Credit='1 to 4' Space Section='A to Z' Then Enter \xba");
+			gotoxy(print,14);
+			for(count=0;count<62;count++)
+			{
+				printf("%c",254);
+			}
+			int print=45,print1=17;
+			for(count=0;count<course_size;count++)
+			{
+				gotoxy(print,print1);printf("Course%d : | Credit  |  Section  | :  ",count+1);
+				scanf("\n%d\n%c",&Credit[count],&Section[count]);
+				print1++;
+			}
+			clearWindow();
+			print_heading("CREDIT & SECTION ADD");
+			gotoxy(print,11);
+			for(count=0;count<=40;count++)
+			{
+				printf("%c",254);
+			}
+			gotoxy(print,12);printf("\xba   COURSE");gotoxy(58,12);printf("\xba   CREDIT");gotoxy(71,12);printf("\xba   SECTION   \xba");
+			gotoxy(print,13);
+			for(count=0;count<=40;count++)
+			{
+				printf("%c",254);
+			}
+			print1=14;
+			int print2=15;
+			for(count=0;count<course_size;count++)
+			{
+				gotoxy(45,print1);printf("\xba     %d",count+1);
+				gotoxy(58,print1);printf("\xba     %d",Credit[count]);
+				gotoxy(71,print1);printf("\xba      %c      \xba",Section[count]);
+				print1=print1+1;
+			}
+	}
+    fclose(fp);
+    return;
+}
+
+void Course_Payment(void)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("COURSE PAYMENT");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+		again:
+		int total_credit;
+		float percentage;
+		int paid;
+		gotoxy(print,10);printf("How Many Credits Have You Taken in Total This Semester :  ");
+		scanf("%d",&total_credit);
+		if(total_credit>20)
+		{
+			gotoxy(print,12);printf("Sorry! you can't take more than 20 credits.");
+			Beep(384,500);
+			Beep(382,500);
+			Beep(384,500);
+			Beep(382,500);
+			clearWindow();
+			goto again;
+	}
+	gotoxy(print,12);printf("What Percentage Waiver Are You Getting :  ");
+	scanf("%f",&percentage);
+	if(percentage>100)
+	{
+		gotoxy(40,12);printf("Sorry! will not be more 100 percent.");
+		Beep(384,500);
+		Beep(382,500);
+		Beep(384,500);
+		Beep(382,500);
+		clearWindow();
+		goto again;
+	}
+	int Total_Credit_Amount=13500+(3500*total_credit);
+	int discount=Total_Credit_Amount*(percentage/100);
+	int final_discount=Total_Credit_Amount-discount;
+	if(percentage==0)
+	{
+		gotoxy(40,14);printf("Your total money '%d Tk.' for '%d' courses.",Total_Credit_Amount,total_credit);
+	}
+	if(percentage>0)
+	{
+		gotoxy(40,14);printf("Total money including waiver = '%d Tk.'",final_discount);
+	}
+	gotoxy(print,16);printf("How Much Do You Want To Pay This Semester :  ");
+	scanf("%d",&paid);
+
+
+	if(paid<50)
+	{
+		gotoxy(print,17);printf("Sorry! Please again input  be above the minimum 50 Tk.");
+		Beep(384,500);
+		Beep(382,500);
+		Beep(384,500);
+		Beep(382,500);
+		clearWindow();
+		goto again;
+	}
+	if(paid>final_discount)
+	{
+		gotoxy(print,17);printf("Sorry! Please again input pay within '%d Tk.",final_discount);
+		Beep(384,500);
+		Beep(382,500);
+		Beep(384,500);
+		Beep(382,500);
+		clearWindow();
+		goto again;
+	}
+	if(paid>Total_Credit_Amount)
+	{
+		gotoxy(print,17);printf("\n\t\t  Sorry! Please again input pay within '%d Tk.",Total_Credit_Amount);
+		Beep(384,500);
+		Beep(382,500);
+		Beep(384,500);
+		Beep(382,500);
+		clearWindow();
+		goto again;
+	}
+	if(percentage==0)
+	{
+		clearWindow();
+		gotoxy(40,12);
+		for(count=0;count<50;count++)
+		{
+			printf("%c",254);	
+		}
+		gotoxy(40,13);printf("\xba");gotoxy(89,13);printf("\xba");
+		gotoxy(40,14);printf("\xba     Your Payable Amount       :  %d Tk.",Total_Credit_Amount);gotoxy(89,14);printf("\xba");
+		gotoxy(40,15);printf("\xba     Your Paid Amount          :  %d Tk.",paid);gotoxy(89,15);printf("\xba");
+		gotoxy(40,16);printf("\xba     Your Currently Due Amount :  %d Tk.",Total_Credit_Amount-paid);gotoxy(89,16);printf("\xba");
+		gotoxy(40,17);printf("\xba");gotoxy(89,17);printf("\xba");
+		gotoxy(40,18);
+		for(count=0;count<50;count++)
+		{
+			printf("%c",254);	
+		}
+	}
+	else
+	{
+		clearWindow();
+		gotoxy(40,12);
+		for(count=0;count<50;count++)
+		{
+			printf("%c",254);	
+		}
+		gotoxy(40,13);printf("\xba");gotoxy(89,13);printf("\xba");
+		gotoxy(40,14);printf("\xba     Your Payable Amount       :  %d Tk.",Total_Credit_Amount-discount);gotoxy(89,14);printf("\xba");
+		gotoxy(40,15);printf("\xba     Your Paid Amount          :  %d Tk.",paid);gotoxy(89,15);printf("\xba");
+		gotoxy(40,16);printf("\xba     Your Currently Due Amount :  %d Tk.",final_discount-paid);gotoxy(89,16);printf("\xba");
+		gotoxy(40,17);printf("\xba");gotoxy(89,17);printf("\xba");
+		gotoxy(40,18);
+		for(count=0;count<50;count++)
+		{
+			printf("%c",254);	
+		}
+
+	}
+		
+	}
+    fclose(fp);
+    return;
+}
+
+void Sgpa_Calculation(int count,int course_size,int Credit_Grade[],float gradePoint[],int sum1,float sum2)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("SEMESTER SGPA CALCULATION");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+    else
+    {
+    	gotoxy(39,10);
+		for(count=37;count<=95;count++)
+		{
+			printf("%c",205);
+		}
+		gotoxy(39,11);printf("\xba   MARKS    \xba");gotoxy(55,11);printf("GRADE   \xba");gotoxy(67,11);printf("GRADE POINT   \xba");gotoxy(87,11);printf("REMARKS");gotoxy(97,11);printf("\xba");
+		gotoxy(39,12);
+		for(count=37;count<=95;count++)
+		{
+			printf("%c",205);
+		}
+		gotoxy(39,13);printf("\xba 80-100     \xba");gotoxy(57,13);printf("A+    \xba");gotoxy(69,13);printf("4.00        \xba");gotoxy(84,13);printf("Outstanding");gotoxy(97,13);printf("\xba");
+		gotoxy(39,14);printf("\xba 75-79      \xba");gotoxy(57,14);printf("A     \xba");gotoxy(69,14);printf("3.75        \xba");gotoxy(84,14);printf("Excellent");gotoxy(97,14);printf("\xba");
+		gotoxy(39,15);printf("\xba 70-74      \xba");gotoxy(57,15);printf("A-    \xba");gotoxy(69,15);printf("3.50        \xba");gotoxy(84,15);printf("Very Good");gotoxy(97,15);printf("\xba");		
+		gotoxy(39,16);printf("\xba 65-69      \xba");gotoxy(57,16);printf("B+    \xba");gotoxy(69,16);printf("3.25        \xba");gotoxy(84,16);printf("Good");gotoxy(97,16);printf("\xba");		
+		gotoxy(39,17);printf("\xba 60-64      \xba");gotoxy(57,17);printf("B     \xba");gotoxy(69,17);printf("3.00        \xba");gotoxy(84,17);printf("Satisfactory");gotoxy(97,17);printf("\xba");
+		gotoxy(39,18);printf("\xba 55-59      \xba");gotoxy(57,18);printf("B-    \xba");gotoxy(69,18);printf("2.75        \xba");gotoxy(84,18);printf("Above Avg");gotoxy(97,18);printf("\xba");
+		gotoxy(39,19);printf("\xba 50-54      \xba");gotoxy(57,19);printf("C+    \xba");gotoxy(69,19);printf("2.50        \xba");gotoxy(84,19);printf("Average");gotoxy(97,19);printf("\xba");
+		gotoxy(39,20);printf("\xba 45-49      \xba");gotoxy(57,20);printf("C     \xba");gotoxy(69,20);printf("2.25        \xba");gotoxy(84,20);printf("Below Avg");gotoxy(97,20);printf("\xba");	
+		gotoxy(39,21);printf("\xba 40-44      \xba");gotoxy(57,21);printf("D     \xba");gotoxy(69,21);printf("2.00        \xba");gotoxy(84,21);printf("Pass");gotoxy(97,21);printf("\xba");
+		gotoxy(39,22);printf("\xba 00-39      \xba");gotoxy(57,22);printf("F     \xba");gotoxy(69,22);printf("0.00        \xba");gotoxy(84,22);printf("Fail");gotoxy(97,22);printf("\xba");
+		gotoxy(39,23);
+		for(count=37;count<=95;count++)
+		{
+			printf("%c",205);
+		}
+		gotoxy(45,25);printf("Please enter prees 'n' next page->-> ");
+		scanf("%s",&next_page);
+		clearWindow();
+		
+		
+		print_heading("SEMESTER SGPA CALCULATION");
+		again:
+		gotoxy(print,10);printf("Please Enter How Many Courses Did You Take This Semester : ");
+			scanf("%d",&course_size);
+			if(course_size>10)
+			{
+				gotoxy(42,11);printf("''No more than '10' courses can be taken.''");
+				clearWindow();
+				goto again;
+			}
+			gotoxy(print,12);
+			for(count=0;count<62;count++)
+			{
+				printf("%c",254);
+			}
+			gotoxy(print,13);printf("\xba Example: Credit='1 to 4'Space Grade-Point='4.00' Then Enter\xba");
+			gotoxy(print,14);
+			for(count=0;count<62;count++)
+			{
+				printf("%c",254);
+			}
+			int print=45,print1=17;
+			for(count=0;count<course_size;count++)
+			{
+				gotoxy(print,print1);printf("Course%d : | Credit  |  Grade-Point  | :  ",count+1);
+				scanf("\n%d\n%f",&Credit_Grade[count],&gradePoint[count]);
+				print1++;
+			}
+			clearWindow();
+			
+			
+			print_heading("SEMESTER SGPA CALCULATION");
+			gotoxy(print,11);
+			for(count=0;count<=43;count++)
+			{
+				printf("%c",254);
+			}
+			gotoxy(print,12);printf("\xba   COURSE");gotoxy(58,12);printf("\xba   CREDIT");gotoxy(71,12);printf("\xba   GRADE-POINT  \xba");
+			gotoxy(print,13);
+			for(count=0;count<=43;count++)
+			{
+				printf("%c",254);
+			}
+			print1=14;
+			int print2=15;
+			for(count=0;count<course_size;count++)
+			{
+				gotoxy(45,print1);printf("\xba     %d",count+1);
+				gotoxy(58,print1);printf("\xba     %d",Credit_Grade[count]);
+				gotoxy(71,print1);printf("\xba      %.2f      \xba",gradePoint[count]);
+				print1=print1+1;
+			}
+			
+			sum1=0;
+			sum2=0;
+			for(count=0;count<course_size;count++)
+			{
+				sum1+=Credit_Grade[count];
+				sum2+=(Credit_Grade[count]*gradePoint[count]);
+			}
+			gotoxy(55,24);printf("Your Semester SGPA : %.2f",sum2/sum1);
+			
+	}
+	fclose(fp);
+	return;
+	
+		
+		
+		
+}
+int Library_Management()
+{
+	Loading(count);
+	clearWindow();
+    print_heading("STUDENTS LIBRARY MANAGEMENT");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+		do
+		{
+			again:
+			Library_Menu_List();
+			switch(book_choice_number)
+			{
+				case 1:
+					Add_Books(lib,&itemcount1,another);
+					break;
+				case 2:
+					View_Books(lib,itemcount1);
+					break;
+				case 3:
+					Update_Books(lib,itemcount1);
+					break;
+				case 4:
+					Search_Books(lib,itemcount1,j);
+					break;
+				case 5:
+					Delete_Books(lib,&itemcount1);
+					break;
+				case 6:
+					return 1;
+				default:
+					gotoxy(print,12);printf("Sorry! Wrong your choose number!Please try again! (1 to 6)");
+					Beep(384,500);
+					Beep(382,500);
+					Beep(384,500);
+					Beep(382,500);
+					goto again;
+			}
+			gotoxy(40,26);printf("\t     Please enter y or Y to continue: ");
+			scanf("%s",&next);
+			fflush(stdin);
+			clearWindow();
+		}while(book_choice_number!=6);
+	}
+    fclose(fp);
+    //return;
+}
+
+void Library_Menu_List()
+{
+	int print= 46;
+	gotoxy(46,10);
+	for(count=0;count<43;count++)
+	{
+		printf("%c",254);
+	}
+	gotoxy(print,11);printf("\xba");gotoxy(88,11);printf("\xba");
+	gotoxy(print,12);printf("\xba\t\t1. Add Books");gotoxy(88,12);printf("\xba");
+	gotoxy(print,13);printf("\xba\t\t2. View Books");gotoxy(88,13);printf("\xba");
+	gotoxy(print,14);printf("\xba\t\t3. Update Books");gotoxy(88,14);printf("\xba");
+	gotoxy(print,15);printf("\xba\t\t4. Search Books");gotoxy(88,15);printf("\xba");
+	gotoxy(print,16);printf("\xba\t\t5. Delete Books");gotoxy(88,16);printf("\xba");
+	gotoxy(print,17);printf("\xba\t\t6. Back Main Menu");gotoxy(88,17);printf("\xba");
+	gotoxy(print,19);printf("\xba");gotoxy(88,19);printf("\xba");
+	gotoxy(46,20);
+	for(count=0;count<43;count++)
+	{
+		printf("%c",254);
+	}
+	gotoxy(print,18);printf("\xba\t   =>=>please enter your choise=>=>");gotoxy(88,18);printf("\xba");
+	scanf("%d",&book_choice_number);
+	clearWindow();
+}
+
+void Add_Books(library lib[],int *itemcount1,char another)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("STUDENTS LIBRARY MANAGEMENT");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+    else
+    {
+		
+		while(another=='y')
+		{
+			gotoxy(print,10);printf("\tEntert Books  ID Number           : ");
+			scanf("%s",&lib[*itemcount1].library_book_id);
+			fflush(stdin);
+			if(Search1(lib,lib[*itemcount1].library_book_id,*itemcount1)!=-1)
+			{
+				gotoxy(print,11);printf("\t   This book ID already exists\n");
+				gotoxy(print,13);printf("\tEnter Books  ID Number        : ");
+				scanf("%s",&lib[*itemcount1].library_book_id);
+				fflush(stdin);
+			}
+			gotoxy(print,14);printf("\tEnter Book Name                   : ");
+			gets(lib[*itemcount1].library_book_name);
+			gotoxy(print,15);printf("\tEnter Book Author Name            : ");
+			gets(lib[*itemcount1].library_book_author);
+			gotoxy(print,16);printf("\tEnter Student Name                : ");
+			gets(lib[*itemcount1].library_book_student_name);
+			gotoxy(print,17);printf("\tEnter Date in Format(day/month/year): ");
+			gets(lib[*itemcount1].library_book_time);
+			gotoxy(print,19);printf("\tThank you students,your information has been added.");
+			gotoxy(print,22);printf("\t\tAdd Another Students(y/n) : ");
+			scanf("%s",&another);
+			fflush(stdin);
+			++(*itemcount1);
+			clearWindow();
+		}	
+		
+	}
+    fclose(fp);
+    return;
+}
+
+char View_Books(library lib[],int itemcount1)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("VIEW BOOKS");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL){
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+	
+    	int j=0;
+		while(j<itemcount1)
+		{
+			if(lib[j].library_book_id!="")
+			{
+				gotoxy(50,12);printf("Books Count = %d",j+1);
+        		gotoxy(print,13);printf("\tBooks ID            :  %s",lib[j].library_book_id);
+				gotoxy(print,14);printf("\tBooks  Name         :  %s",lib[j].library_book_name);
+				gotoxy(print,15);printf("\tBooks Author Name   :  %s",lib[j].library_book_author);
+				gotoxy(print,16);printf("\tStudents Name       :  %s",lib[j].library_book_student_name);
+				gotoxy(print,17);printf("\tBooks Issue Date    :  %s",lib[j].library_book_time);
+			}
+			j=j+1;
+		}
+	}
+    fclose(fp);
+    return j;
+}
+
+void Update_Book_Menu_List()
+{
+		int print=37;
+		gotoxy(print,12);printf("\t1. Books Name");
+		gotoxy(print,13);printf("\t2. Books Author Name");
+		gotoxy(print,14);printf("\t3. Students Name");
+		gotoxy(print,15);printf("\t4. Day/Month/Year");
+}
+
+void Update_Books(library lib[],int itemcount1)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("BOOKS PROFILE UPDATE");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+	}
+	else
+	{
+		char id_book[max];
+		int column_index1;
+		gotoxy(print,10);printf("\tEnter Books ID :   ");
+		scanf("%s",&id_book);
+		while(another=='y')
+		{
+		
+			Update_hostel_students_Menu_List();
+			gotoxy(print,20);printf("\tPlease choose the number for book profile update :  ");
+			scanf("%d",&column_index1);
+			int index1 = Search1(lib,id_book,itemcount1);
+			fflush(stdin);
+			if (index1 != -1)
+			{
+				if (column_index1 == 1)
+				{
+					gotoxy(print,22);printf("\tEnter Books Name:   ");
+					gets(lib[index1].library_book_name);
+			
+				}
+				else if (column_index1 == 2)
+				{
+					gotoxy(print,22);printf("\tEnter Books Author Name :   ");
+					gets(lib[index1].library_book_author);
+				}
+				else if (column_index1 == 3)
+				{
+					gotoxy(print,22);printf("\tEnter Students Name        :   ");
+					gets(lib[index1].library_book_student_name);
+				}
+				else if (column_index1 == 4)
+				{
+					gotoxy(print,22);printf("\tEnter Date in Format(day/month/year):    ");
+					gets(lib[index1].library_book_time);
+				}
+			
+				else 
+				{
+					gotoxy(print,11);printf("\tSorry!Invalid your choose number");
+				}
+			}
+		
+			else
+			{
+				gotoxy(print,22);printf("\tThe record deosn't exits.Check the ID and try again.");
+			}
+			gotoxy(print,25);printf("\t\t Another Number Profile Update(y/n) : ");
+			scanf("%s",&another);
+			fflush(stdin);
+			clearWindow();
+		}
+    	fclose(fp);
+    	clearWindow();
+    	return;
+    
+    }
+}
+
+/*------------------------Books search function to the location of the record-----------------------*/
+int Search1(library lib[],char id_book[],int itemcount1)
+{
+	int found1=-1,j;
+	for (j=0;j<itemcount1 && found1==-1;j++)
+	{
+		if(strcmp(lib[j].library_book_id,id_book)==0)
+		found1=j;
+		else found1=-1 ;
+	}
+	return found1;
+}
+//----------------------------------Books search function to the find record---------------------------------
+void Search_Books(library lib[],int itemcount1,int j)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("SEARCH BOOKS");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL){
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+		char id_book[max];
+		int column_index1;
+		gotoxy(print,10);printf("\tEnter Books ID :   ");
+		scanf("%s",&id_book);
+		while(another=='y')
+		{
+		
+			int index1 = Search1(lib,id_book,itemcount1);
+			fflush(stdin);
+			if (index1 != -1)
+			{
+	 		
+        		gotoxy(50,12);printf("Books Count = %d",j+1);
+        		gotoxy(print,13);printf("\tBooks ID            :  %s",lib[index1].library_book_id);
+				gotoxy(print,14);printf("\tBooks  Name         :  %s",lib[index1].library_book_name);
+				gotoxy(print,15);printf("\tBooks Author Name   :  %s",lib[index1].library_book_author);
+				gotoxy(print,16);printf("\tStudents Name       :  %s",lib[index1].library_book_student_name);
+				gotoxy(print,17);printf("\tBooks Issue Date    :  %s",lib[index1].library_book_time);
+				gotoxy(print,25);printf("\t\t Another Books Search(y/n) : ");
+				scanf("%s",&another);
+				fflush(stdin);
+				clearWindow();
+			}
+			else
+			{
+				gotoxy(print,10);printf("\t''The record doesn't exits.''\n");
+				Beep(384,500);
+				Beep(382,500);
+				Beep(384,500);
+			}
+		}
+	}
+    fclose(fp);
+    return;
+}
+/*-------------------------------------Delete Books--------------------------------------------*/
+void Delete_Books(library lib[],int *itemcount1)
+{
+	
+	Loading(count);
+	clearWindow();
+    print_heading("DELETE BOOKS");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL){
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+		char id_book[10];
+		int index1,j;
+		if (*itemcount1 > 0)
+		{
+			gotoxy(print,10);
+			printf("\tDelete Books ID:   ");
+			scanf("%s",id_book);
+			index1= Search1(lib,id_book,*itemcount1);
+			if ((index1!=-1) && (*itemcount1 != 0))
+			{
+				if (index1 == (*itemcount1-1)) //delete the last record
+				{
+					Books_clean(lib,index1);
+					--(*itemcount1);
+					gotoxy(45,14);printf("''The record was deleted.''\n");
+				}
+				else//-----delete the first or middle record-----
+				{
+					for (j = index1; j < *itemcount1-1; j++)
+					{
+						lib[j] = lib[j + 1];
+						Books_clean(lib, *itemcount1);
+						--(*itemcount1) ;
+					}
+				}
+
+			}
+			else 
+			{
+				gotoxy(print,12);
+				printf("\tThe record doesn't exist. Please try again.");
+			}
+		}
+		else 
+		{
+			gotoxy(40,12);printf("\t''Sorry!No record to delete''\n");
+			Beep(384,500);
+			Beep(382,500);
+			Beep(384,500);
+			Beep(382,500);                         
+		}
+	}
+    fclose(fp);
+    return;
+}
+
+//function to clean deleted record
+void Books_clean(library lib[],int index1)
+{
+	strcpy(lib[index1].library_book_id,"");
+	strcpy(lib[index1].library_book_name,"");
+	strcpy(lib[index1].library_book_author,"");
+	strcpy(lib[index1].library_book_time,"");
+}
+
+
+int Hostel_Management()
+{
+	Loading(count);
+	clearWindow();
+    print_heading("STUDENTS HOSTEL MANAGEMENT");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+		do
+		{
+			again:
+			Hostel_Menu_List();
+			switch(hostel_choice_number)
+			{
+				case 1:
+					Hostel_New_Student(hos,&itemcount2,another_hostel);
+					break;
+				case 2:
+					Hostel_Student_Update(hos,itemcount2,another_hostel);
+					break;
+				case 3:
+					Hostel_Student_View(hos,itemcount2,another_hostel);
+					break;
+				case 4:
+					Search_Hostel_Student_Information(hos,itemcount2,k,another_hostel);
+					break;
+				case 5:
+					Delete_Hostel_Students_Information(hos,&itemcount2);
+					break;
+				case 6:
+					return 1;
+				default:
+					gotoxy(print,12);printf("Sorry! Wrong your choose number!Please try again! (1 to 6)");
+					Beep(384,500);
+					Beep(382,500);
+					Beep(384,500);
+					Beep(382,500);
+					goto again;
+			}
+			gotoxy(40,26);printf("\t     Please enter y or Y to continue: ");
+			scanf("%s",&next);
+			fflush(stdin);
+			clearWindow();
+		}while(hostel_choice_number!=6);
+	}
+    fclose(fp);
+    //return;
+}
+
+void Hostel_Menu_List(void)
+{
+	int print= 46;
+	gotoxy(46,10);
+	for(count=0;count<43;count++)
+	{
+		printf("%c",254);
+	}
+	gotoxy(print,11);printf("\xba");gotoxy(88,11);printf("\xba");
+	gotoxy(print,12);printf("\xba\t\t1. Add New Students");gotoxy(88,12);printf("\xba");
+	gotoxy(print,13);printf("\xba\t\t2. Update Information");gotoxy(88,13);printf("\xba");
+	gotoxy(print,14);printf("\xba\t\t3. View All Students");gotoxy(88,14);printf("\xba");
+	gotoxy(print,15);printf("\xba\t\t4. Check The Details");gotoxy(88,15);printf("\xba");
+	gotoxy(print,16);printf("\xba\t\t5. Removing Existing Account");gotoxy(88,16);printf("\xba");
+	gotoxy(print,17);printf("\xba\t\t6. Go TO Main Menu");gotoxy(88,17);printf("\xba");
+	gotoxy(print,19);printf("\xba");gotoxy(88,19);printf("\xba");
+	gotoxy(46,20);
+	for(count=0;count<43;count++)
+	{
+		printf("%c",254);
+	}
+	gotoxy(print,18);printf("\xba\t   =>=>please enter your choise=>=>");gotoxy(88,18);printf("\xba");
+	scanf("%d",&hostel_choice_number);
+	clearWindow();
+}
+
+void Hostel_New_Student(hostel hos[],int *itemcount2,char another_hostel)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("HOSTEL STUDENTS ADD");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+    else
+    {
+		
+		while(another_hostel=='y')
+		{
+			gotoxy(print,10);printf("\tStudents ID Number           : ");
+			scanf("%s",&hos[*itemcount2].hostel_stu_id);
+			fflush(stdin);
+			if(Search2(hos,hos[*itemcount2].hostel_stu_id,*itemcount2)!=-1)
+			{
+				gotoxy(print,11);printf("\t   This book ID already exists\n");
+				gotoxy(print,13);printf("\tStudents ID Number           : ");
+				scanf("%s",&hos[*itemcount2].hostel_stu_id);
+				fflush(stdin);
+			}
+			gotoxy(print,14);printf("\tStudents Name                : ");
+			gets(hos[*itemcount2].hostel_stu_name);
+			gotoxy(print,15);printf("\tStudents Age                 : ");
+			scanf("%d",&hos[*itemcount2].hostel_stu_age);fflush(stdin);
+			gotoxy(print,16);printf("\tStudents NID Number          : ");
+			gets(hos[*itemcount2].hostel_stu_nid);
+			gotoxy(print,17);printf("\tStudents Contact             : ");
+			gets(hos[*itemcount2].hostel_stu_contact);
+			gotoxy(print,18);printf("\tStudents Father Name         : ");
+			gets(hos[*itemcount2].hostel_stu_father_name);
+			gotoxy(print,19);printf("\tStudents Mother Name         : ");
+			gets(hos[*itemcount2].hostel_stu_mother_name);
+			gotoxy(print,20);printf("\tStudents Father Contact      : ");
+			gets(hos[*itemcount2].hostel_stu_father_contact);
+			gotoxy(print,21);printf("\tStudents Birthday Date       : ");
+			gets(hos[*itemcount2].hostel_stu_birthday_date);
+			gotoxy(print,22);printf("\tHostel Room Number           : ");
+			gets(hos[*itemcount2].hostel_stu_room_number);
+			gotoxy(print,24);printf("\tThank you students,your information has been added.");
+			gotoxy(print,25);printf("\t\tAdd Another Students(y/n) : ");
+			scanf("%s",&another_hostel);
+			fflush(stdin);
+			++(*itemcount2);
+			clearWindow();
+		}	
+		
+	}
+    fclose(fp);
+    return;
+}
+
+char Hostel_Student_View(hostel hos[],int itemcount2,char another_hostel)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("HOSTEL STUDENTS VIEW");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL){
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+	
+    	int k=0;
+		while(k<itemcount2)
+		{
+			if(hos[k].hostel_stu_id!="")
+			{
+				gotoxy(50,12);printf("Students Count = %d",k+1);
+        		gotoxy(print,13);printf("\tStudents ID            :  %s",hos[k].hostel_stu_id);
+				gotoxy(print,14);printf("\tStudents Name          :  %s",hos[k].hostel_stu_name);
+				gotoxy(print,15);printf("\tStudents Age           :  %d",hos[k].hostel_stu_age);
+				gotoxy(print,16);printf("\tStudents NID Number    :  %s",hos[k].hostel_stu_nid);
+				gotoxy(print,17);printf("\tStudents Contact       :  %s",hos[k].hostel_stu_contact);
+				gotoxy(print,18);printf("\tStudents Father Name   :  %s",hos[k].hostel_stu_father_name);
+				gotoxy(print,19);printf("\tStudents Father Contact:  %s",hos[k].hostel_stu_father_contact);
+				gotoxy(print,20);printf("\tStudents Mother Name   :  %s",hos[k].hostel_stu_mother_name);
+				gotoxy(print,21);printf("\tStudents Birthday      :  %s",hos[k].hostel_stu_birthday_date);
+				gotoxy(print,22);printf("\tHostel Room Number     :  %s",hos[k].hostel_stu_room_number);
+				
+			}
+			k=k+1;
+		}
+	}
+    fclose(fp);
+    return j;
+}
+
+void Update_hostel_students_Menu_List()
+{
+		int print=37;
+		gotoxy(print,12);printf("\t1. Students Name");
+		gotoxy(print,13);printf("\t2. Students Age");
+		gotoxy(print,14);printf("\t3. Students Contact Number");
+		gotoxy(print,15);printf("\t4. Students Father Name");
+		gotoxy(print,16);printf("\t5. Students Father Contact");
+		gotoxy(print,17);printf("\t6. Students Mother Name");
+		gotoxy(print,18);printf("\t7. Students Birthday Date");
+		gotoxy(print,19);printf("\t8. Hostel Room Number");
+}
+void Hostel_Student_Update(hostel hos[],int itemcount2,char another_hostel)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("HOSTEL STUDENTS UPDATE");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+	}
+	else
+	{
+		char id_hos[max];
+		int column_index2;
+		gotoxy(print,10);printf("\tEnter Students ID :   ");
+		scanf("%s",&id_hos);
+		while(another_hostel=='y')
+		{
+		
+			Update_hostel_students_Menu_List();
+			gotoxy(print,20);printf("\tPlease choose the number for book profile update-->> ");
+			scanf("%d",&column_index2);
+			int index2 = Search2(hos,id_hos,itemcount2);
+			fflush(stdin);
+			if (index2!= -1)
+			{
+				if (column_index2 == 1)
+				{
+					gotoxy(print,22);printf("\tStudents Name                  :  ");
+					gets(hos[index2].hostel_stu_name);
+			
+				}
+				else if (column_index2 == 2)
+				{
+					gotoxy(print,22);printf("\tStudents Age                   :  ");
+					scanf("%d",&hos[index2].hostel_stu_age);
+				}
+				else if (column_index2 == 3)
+				{
+					gotoxy(print,22);printf("\tStudents contact               :  ");
+					gets(hos[index2].hostel_stu_contact);
+				}
+				else if (column_index2 == 4)
+				{
+					gotoxy(print,22);printf("\tStudents Father Name           :  ");
+					gets(hos[index2].hostel_stu_father_name);
+				}
+				else if (column_index2 == 5)
+				{
+					gotoxy(print,22);printf("\tStudents Father contact        :  ");
+					gets(hos[index2].hostel_stu_father_contact);
+				}
+				else if (column_index2 == 6)
+				{
+					gotoxy(print,22);printf("\tStudents Mother Name           :  ");
+					gets(hos[index2].hostel_stu_mother_name);
+				}
+				else if (column_index2 == 7)
+				{
+					gotoxy(print,22);printf("\tStudents Birthday Date         :  ");
+					gets(hos[index2].hostel_stu_birthday_date);
+		
+				}
+				else if (column_index2 == 8)
+				{
+					gotoxy(print,22);printf("\tHostel Room Number             :  ");
+					gets(hos[index2].hostel_stu_room_number);
+				}
+				else 
+				{
+					gotoxy(45,23);printf("\tSorry!Invalid your choose number");
+				}
+			}
+		
+			else
+			{
+				gotoxy(print,22);printf("\tThe record deosn't exits.Check the ID and try again.");
+			}
+			gotoxy(print,25);printf("\t\t Another Number Profile Update(y/n) : ");
+			scanf("%s",&another_hostel);
+			fflush(stdin);
+			clearWindow();
+		}
+    	fclose(fp);
+    	clearWindow();
+    	return;
+    
+    }
+}
+
+/*------------------------Students search function to the location of the record-----------------------*/
+int Search2(hostel hos[],char id_hos[],int itemcount2)
+{
+	int found2=-1,k;
+	for (k=0;k<itemcount2 && found2==-1;k++)
+	{
+		if(strcmp(hos[k].hostel_stu_id,id_hos)==0)
+		found2=k;
+		else found2=-1 ;
+	}
+	return found2;
+}
+//----------------------------------Books search function to the find record---------------------------------
+void Search_Hostel_Student_Information(hostel hos[],int itemcount2,int k,char another_hostel)
+{
+	Loading(count);
+	clearWindow();
+    print_heading("HOSTEL STUDENTS SEARCH");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL)
+	{
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+		char id_hos[max];
+		int column_index2;
+		gotoxy(print,10);printf("\tEnter Search Students ID :   ");
+		scanf("%s",&id_hos);
+		while(another_hostel=='y')
+		{
+		
+			int index2=Search2(hos,id_hos,itemcount2);
+			if (index2!= -1)
+			{
+				
+				gotoxy(50,12);printf("Students Count = %d",k+1);
+        		gotoxy(print,13);printf("\tStudents ID            :  %s",hos[k].hostel_stu_id);
+				gotoxy(print,14);printf("\tStudents Name          :  %s",hos[k].hostel_stu_name);
+				gotoxy(print,15);printf("\tStudents Age           :  %d",hos[k].hostel_stu_age);
+				gotoxy(print,16);printf("\tStudents NID Number    :  %s",hos[k].hostel_stu_nid);
+				gotoxy(print,17);printf("\tStudents Contact       :  %s",hos[k].hostel_stu_contact);
+				gotoxy(print,18);printf("\tStudents Father Name   :  %s",hos[k].hostel_stu_father_name);
+				gotoxy(print,19);printf("\tStudents Father Contact:  %s",hos[k].hostel_stu_father_contact);
+				gotoxy(print,20);printf("\tStudents Mother Name   :  %s",hos[k].hostel_stu_mother_name);
+				gotoxy(print,21);printf("\tStudents Birthday      :  %s",hos[k].hostel_stu_birthday_date);
+				gotoxy(print,22);printf("\tHostel Room Number     :  %s",hos[k].hostel_stu_room_number);
+				gotoxy(print,25);printf("\t\t Another Books Search(y/n) : ");
+				scanf("%s",&another_hostel);
+				fflush(stdin);
+				clearWindow();
+			}
+			else
+			{
+				gotoxy(print,10);printf("\t''The record doesn't exits.''\n");
+				Beep(384,500);
+				Beep(382,500);
+				Beep(384,500);
+			}
+		}
+	}
+    fclose(fp);
+    return;
+}
+/*-------------------------------------Delete hostel record-------------------------------------------*/
+void Delete_Hostel_Students_Information(hostel hos[],int *itemcount2)
+{
+	
+	Loading(count);
+	clearWindow();
+    print_heading("HOSTEL STUDENTS DELETE");
+    int print = 37;
+    FILE *fp;
+    fp = fopen("record.txt","ab+");
+    if(fp == NULL){
+        MessageBox(0,"Error in Opening file\nMake sure your file is not write protected","Warning",0);
+
+    }
+	else
+	{
+		char id_hos[10];
+		int index2,k;
+		if (*itemcount2 > 0)
+		{
+			gotoxy(print,10);
+			printf("\tDelete Students ID:   ");
+			scanf("%s",id_hos);
+			index2= Search2(hos,id_hos,*itemcount2);
+			if ((index2!=-1) && (*itemcount2 != 0))
+			{
+				if (index2 == (*itemcount2-1)) //delete the last record
+				{
+					Clean_Hostel_Students_Information(hos,index2);
+					--(*itemcount2);
+					gotoxy(45,14);printf("''The record was deleted.''\n");
+				}
+				else//-----delete the first or middle record-----
+				{
+					for (k = index2; k < *itemcount2-1; k++)
+					{
+						hos[k] = hos[k + 1];
+						Clean_Hostel_Students_Information(hos, *itemcount2);
+						--(*itemcount2) ;
+					}
+				}
+
+			}
+			else 
+			{
+				gotoxy(print,12);
+				printf("\tThe record doesn't exist. Please try again.");
+			}
+		}
+		else 
+		{
+			gotoxy(40,12);printf("\t''Sorry!No record to delete''\n");
+			Beep(384,500);
+			Beep(382,500);
+			Beep(384,500);
+			Beep(382,500);                         
+		}
+	}
+    fclose(fp);
+    return;
+}
+
+//function to clean deleted record
+void Clean_Hostel_Students_Information(hostel hos[],int index2)
+{
+	strcpy(hos[index2].hostel_stu_id,"");
+	strcpy(hos[index2].hostel_stu_name,"");
+	strcpy(hos[index2].hostel_stu_nid,"");
+	strcpy(hos[index2].hostel_stu_contact,"");
+	strcpy(hos[index2].hostel_stu_father_name,"");
+	strcpy(hos[index2].hostel_stu_mother_name,"");
+	strcpy(hos[index2].hostel_stu_father_contact,"");
+	strcpy(hos[index2].hostel_stu_birthday_date,"");
+	strcpy(hos[index2].hostel_stu_room_number,"");
+}
+
+void Logout()
+{
+	system("cls");
+	gotoxy(45,10);
+	MessageBox(MB_OK,"Thank you for your time on our system. Come again.\n\nDaffodil International University(DIU)\n\n\t\t\tJobayed Hossain (Rabbi)\n\n\t\t\tID:193-35-2948__30 Batch,\n\n\t\t\tDhanmondi 32,Dhaka","WELCOME",MB_OK);
+	exit(1);
+}
